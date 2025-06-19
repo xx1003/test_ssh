@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  # api
+  api:
+    # dockerfile이 local의 app파일 안에 있으니까
+    build: ./app
+    container_name: ml_api
+    ports:
+      - "8000:8000"
+    volumes:
+      # local app / 컨테이너 app From Dockerfile
+      - ./app:/app
+
+
+  # streamlit
+  streamlit:
+    build: ./app
+    container_name: ml_ui
+    command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./app:/app
+
+    # streamlit이 api에 의존한다
+    depends_on:
+      - api 
+
+
+
+
+  
